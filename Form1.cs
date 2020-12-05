@@ -155,7 +155,7 @@ namespace SnakeGame
                 superItem.y = newY;
             }
             // 10% chance to spawn a rotten item
-            /*else if(rd.Next(0,100) > 80)
+            else if(rd.Next(0,100) > 80)
             {
                 rotten = new Box();
                 rotten.x = newX;
@@ -163,12 +163,10 @@ namespace SnakeGame
             }
             else
             {
-
-            }*/
-
-            item = new Box();
-            item.x = newX;
-            item.y = newY;
+                item = new Box();
+                item.x = newX;
+                item.y = newY;
+            }
 
         }
 
