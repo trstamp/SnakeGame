@@ -147,9 +147,29 @@ namespace SnakeGame
                 }
             }
 
+            // 10% chance to spawn a superItem
+            if (rd.Next(0, 100) > 90)
+            {
+                superItem = new Box();
+                superItem.x = newX;
+                superItem.y = newY;
+            }
+            // 10% chance to spawn a rotten item
+            /*else if(rd.Next(0,100) > 80)
+            {
+                rotten = new Box();
+                rotten.x = newX;
+                rotten.y = newY;
+            }
+            else
+            {
+
+            }*/
+
             item = new Box();
             item.x = newX;
             item.y = newY;
+
         }
 
         private void score_Paint(object sender, PaintEventArgs e)
