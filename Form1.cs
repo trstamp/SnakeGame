@@ -13,14 +13,18 @@ namespace SnakeGame
     public partial class Form1 : Form
     {
         private Snake snake = new Snake();
-        private Box item = new Box();
-        private Box superItem = new Box();
-        private Box rotten = new Box();
+        private Box item = new Box(BoxType.item);
+
+        private bool colorblind = false;
+        //private Box newItem = new Box(BoxType.item);
+
         Random rd = new Random();
+        
 
         private int maxX;
         private int maxY;
 
+        Brush snakeHead;
         Brush snakeColor;
         Brush itemColor;
         Brush rottenColor;
@@ -60,7 +64,7 @@ namespace SnakeGame
             snake.snake.Clear();
 
 
-            Box head = new Box();
+            Box head = new Box(BoxType.item);
             
             head.x = 10;
             head.y = 10;
@@ -70,8 +74,15 @@ namespace SnakeGame
             // score will change on screen when it is updated
             score.Text = Settings.score.ToString();
 
+            // Load descriptions
+            superDesc.Text = "Number of Super Items collected.";
+            itemDesc.Text = "Number of Items collected.";
+            rottenDesc.Text = "Number of Rotten Items collected.";
+
             // item counts need to update
             itemNum.Text = Settings.itemCount.ToString() + "x";
+            rottenNum.Text = Settings.rottenCount.ToString() + "x";
+            superNum.Text = Settings.superItemCount.ToString() + "x";
 
             SpawnBox();
         }
@@ -132,8 +143,13 @@ namespace SnakeGame
             maxX = grid.Size.Width / Settings.width;
             maxY = grid.Size.Height / Settings.height;
 
+            int chanceTime = rd.Next(0, 100);
+
             int newX = rd.Next(0, maxX);
             int newY = rd.Next(0, maxY);
+
+            int altX = rd.Next(0, maxX);
+            int altY = rd.Next(0, maxY);
 
             // check if new box position is on the snake
             for(int i = 0; i <= snake.snake.Count - 1; i++)
@@ -143,30 +159,57 @@ namespace SnakeGame
                 {
                     newX = rd.Next(0, maxX);
                     newY = rd.Next(0, maxY);
-                    i = -1;
+                    i = 0;
                 }
+
+                if (snake.snake[i].x == altX && snake.snake[i].y == altY)
+                {
+                    altX = rd.Next(0, maxX);
+                    altY = rd.Next(0, maxY);
+                    i = 0;
+                }
+
+                if(newX == altX && newY == altY)
+                {
+                    altX = rd.Next(0, maxX);
+                    altY = rd.Next(0, maxY);
+                }
+
             }
 
             // 10% chance to spawn a superItem
-            if (rd.Next(0, 100) > 90)
+            // will also spawn a normal item
+            if (chanceTime > 90)
             {
-                superItem = new Box();
-                superItem.x = newX;
-                superItem.y = newY;
+                item = new Box(BoxType.super);
+                item.x = newX;
+                item.y = newY;
+
+                /*newItem = new Box(BoxType.item);
+                newItem.x = altX;
+                newItem.y = altY;*/
+                
             }
             // 10% chance to spawn a rotten item
-            else if(rd.Next(0,100) > 80)
+            // will also spawn a normal item
+            else if(chanceTime > 80 && chanceTime < 90)
             {
-                rotten = new Box();
-                rotten.x = newX;
-                rotten.y = newY;
+                item = new Box(BoxType.rotten);
+                item.x = newX;
+                item.y = newY;
+
+                /*newItem = new Box(BoxType.item);
+                newItem.x = altX;
+                newItem.y = altY;*/
             }
             else
             {
-                item = new Box();
+                item = new Box(BoxType.item);
                 item.x = newX;
                 item.y = newY;
             }
+
+            
 
         }
 
@@ -181,10 +224,24 @@ namespace SnakeGame
             Graphics gridGr = e.Graphics;
 
             // create brushes for coloring different objects
-            snakeColor = Brushes.Azure;
-            itemColor = Brushes.Red;
-            rottenColor = Brushes.Brown;
-            superItemColor = Brushes.Gold;
+
+            if(colorblind == true)
+            {
+                snakeHead = Brushes.Black;
+                snakeColor = Brushes.DarkBlue;
+                itemColor = Brushes.Red;
+                rottenColor = Brushes.Gray;
+                superItemColor = Brushes.Gold;
+            }
+            else
+            {
+                snakeHead = Brushes.Black;
+                snakeColor = Brushes.Azure;
+                itemColor = Brushes.Red;
+                rottenColor = Brushes.Brown;
+                superItemColor = Brushes.Gold;
+            }
+            
 
             //check
             if (!Settings.isGameOver)
@@ -193,21 +250,56 @@ namespace SnakeGame
                 // create snake
                 for (int i = 0; i < snake.snake.Count; i++)
                 {
-                    
-                    // snake
-                    gridGr.FillRectangle(snakeColor, new Rectangle(snake.snake[i].x * Settings.width, snake.snake[i].y * Settings.height, Settings.width, Settings.height));
+                    if(i == 0)
+                    {
+                        gridGr.FillRectangle(snakeHead, new Rectangle(snake.snake[i].x * Settings.width, snake.snake[i].y * Settings.height, Settings.width, Settings.height));
 
-                    // create item
-                    gridGr.FillRectangle(itemColor, new Rectangle(item.x * Settings.width, item.y * Settings.height, Settings.width, Settings.height));
+                        // create item
+                        if (item.boxType == BoxType.item)
+                        {
+                            gridGr.FillRectangle(itemColor, new Rectangle(item.x * Settings.width, item.y * Settings.height, Settings.width, Settings.height));
+                        }
+                        // create rotten item
+                        else if (item.boxType == BoxType.rotten)
+                        {
+                            gridGr.FillRectangle(rottenColor, new Rectangle(item.x * Settings.width, item.y * Settings.height, Settings.width, Settings.height));
+                        }
+                        // create super item
+                        else if (item.boxType == BoxType.super)
+                        {
+                            gridGr.FillRectangle(superItemColor, new Rectangle(item.x * Settings.width, item.y * Settings.height, Settings.width, Settings.height));
+                        }
+                    }
+                    else
+                    {
+                        // snake
+                        gridGr.FillRectangle(snakeColor, new Rectangle(snake.snake[i].x * Settings.width, snake.snake[i].y * Settings.height, Settings.width, Settings.height));
 
-                    // create rotten item
-                    gridGr.FillRectangle(rottenColor, new Rectangle(rotten.x * Settings.width, rotten.y * Settings.height, Settings.width, Settings.height));
+                        // create item
+                        if (item.boxType == BoxType.item)
+                        {
+                            gridGr.FillRectangle(itemColor, new Rectangle(item.x * Settings.width, item.y * Settings.height, Settings.width, Settings.height));
+                        }
+                        // create rotten item
+                        else if (item.boxType == BoxType.rotten)
+                        {
+                            gridGr.FillRectangle(rottenColor, new Rectangle(item.x * Settings.width, item.y * Settings.height, Settings.width, Settings.height));
+                        }
+                        // create super item
+                        else if (item.boxType == BoxType.super)
+                        {
+                            gridGr.FillRectangle(superItemColor, new Rectangle(item.x * Settings.width, item.y * Settings.height, Settings.width, Settings.height));
+                        }
 
-                    // create superItem
-                    gridGr.FillRectangle(superItemColor, new Rectangle(superItem.x * Settings.width, superItem.y * Settings.height, Settings.width, Settings.height));
+                        /*if (newItem.boxType == BoxType.item)
+                        {
+                            gridGr.FillRectangle(itemColor, new Rectangle(newItem.x * Settings.width, newItem.y * Settings.height, Settings.width, Settings.height));
+                        }*/
+                    }
+
+
 
                 }
-
 
             }
             else
@@ -272,17 +364,12 @@ namespace SnakeGame
 
                     if (snake.snake[0].x == item.x && snake.snake[0].y == item.y)
                     {
-                        Settings.itemCount++;
-                        Collect();
+                        Collect(item.boxType);
                     }
-                    else if (snake.snake[0].x == rotten.x && snake.snake[0].y == rotten.y)
+                    /*else if(snake.snake[0].x == newItem.x && snake.snake[0].y == newItem.y)
                     {
-
-                    }
-                    else if (snake.snake[0].x == superItem.x && snake.snake[0].y == superItem.y)
-                    {
-
-                    }
+                        Collect(newItem.boxType);
+                    }*/
 
                 }
                 // have the rest of the snake follow
@@ -303,23 +390,46 @@ namespace SnakeGame
         }
 
         // collecting an item
-        private void Collect()
+        private void Collect(BoxType type)
         {
             System.Diagnostics.Debug.WriteLine("Entered Collect");
-            Box newBox = new Box();
+
+            if (type == BoxType.item)
+            {
+                Settings.itemCount++;
+                Settings.score += (Settings.points * Settings.speed);
+                
+            }
+            else if(type == BoxType.rotten)
+            {
+                Settings.rottenCount++;
+                Settings.score -= 100;
+            }
+            else
+            {
+                Settings.superItemCount++;
+                Settings.score += (Settings.points * Settings.speed * 5);
+            }
+            
+            Box newBox = new Box(BoxType.item);
             newBox.x = snake.snake[snake.snake.Count - 1].x;
             newBox.y = snake.snake[snake.snake.Count - 1].y;
 
             snake.snake.Add(newBox);
+
             System.Diagnostics.Debug.WriteLine("Collected Box");
+
             // Update score
-            Settings.score += (Settings.points * Settings.speed);
             score.Text = Settings.score.ToString();
 
             // Update Stats
             itemNum.Text = Settings.itemCount.ToString() + "x";
+            rottenNum.Text = Settings.rottenCount.ToString() + "x";
+            superNum.Text = Settings.superItemCount.ToString() + "x";
+
 
             Settings.speed += 2;
+
             SpawnBox();
             System.Diagnostics.Debug.WriteLine("New Box Spawned");
         }
@@ -334,6 +444,22 @@ namespace SnakeGame
             Player.ChangeState(e.KeyCode, false);
         }
 
-        
+        private void ToggleColorBlind(object sender, MouseEventArgs e)
+        {
+            if(colorblind == true)
+            {
+                colorblind = false;
+            }
+            else if(colorblind == false)
+            {
+                colorblind = true;
+            }
+
+        }
+
+        private void cbBackgroundChange(object sender, EventArgs e)
+        {
+            cbButton.BackColor = Color.LightGray;
+        }
     }
 }

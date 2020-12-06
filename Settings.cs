@@ -73,9 +73,23 @@ namespace SnakeGame
             set;
         }
 
+        public static int rottenCount
+        {
+            get;
+            set;
+        }
+
+        public static int superItemCount
+        {
+            get;
+            set;
+        }
+
         public Settings()
         {
             itemCount = 0;
+            rottenCount = 0;
+            superItemCount = 0;
             score = 0;
             width = 20;
             height = 20;
