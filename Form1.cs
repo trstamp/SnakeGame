@@ -19,7 +19,8 @@ namespace SnakeGame
         //private Box newItem = new Box(BoxType.item);
 
         Random rd = new Random();
-        
+
+        private int highScore = 0;
 
         private int maxX;
         private int maxY;
@@ -57,6 +58,7 @@ namespace SnakeGame
             System.Diagnostics.Debug.WriteLine("Entered Reset");
             // set game over message to false so it doesn't show while running
             gameOverLabel.Visible = false;
+
             // create new Settings instance every reset
             new Settings();
             
@@ -228,10 +230,14 @@ namespace SnakeGame
             if(colorblind == true)
             {
                 snakeHead = Brushes.Black;
-                snakeColor = Brushes.DarkBlue;
-                itemColor = Brushes.Red;
+                snakeColor = Brushes.Blue;
+                itemColor = Brushes.Fuchsia;
                 rottenColor = Brushes.Gray;
-                superItemColor = Brushes.Gold;
+                superItemColor = Brushes.DeepSkyBlue;
+
+                label1.BackColor = Color.DeepSkyBlue;
+                label2.BackColor = Color.Gray;
+                boxLabel.BackColor = Color.Fuchsia;
             }
             else
             {
@@ -240,6 +246,10 @@ namespace SnakeGame
                 itemColor = Brushes.Red;
                 rottenColor = Brushes.Brown;
                 superItemColor = Brushes.Gold;
+
+                label1.BackColor = Color.Gold;
+                label2.BackColor = Color.Brown;
+                boxLabel.BackColor = Color.Red;
             }
             
 
@@ -384,6 +394,11 @@ namespace SnakeGame
         // setting isGameOver to game over
         private void GameOver()
         {
+            if(Settings.score > highScore)
+            {
+                highestScore.Text = "Session's highest score: " + Settings.score.ToString();
+                highScore = Settings.score;
+            }
             System.Diagnostics.Debug.WriteLine("Entered GameOver");
             Settings.isGameOver = true;
             gameOverLabel.Visible = true;
@@ -396,17 +411,22 @@ namespace SnakeGame
 
             if (type == BoxType.item)
             {
+                // add one to item count and update score
                 Settings.itemCount++;
                 Settings.score += (Settings.points * Settings.speed);
                 
             }
             else if(type == BoxType.rotten)
             {
+                // add one to rotten count and update score
+                // points deducted does not scale so it is better for the player
                 Settings.rottenCount++;
                 Settings.score -= 100;
             }
             else
             {
+                // add one to super item count
+                // point addition is large to help the player
                 Settings.superItemCount++;
                 Settings.score += (Settings.points * Settings.speed * 5);
             }
@@ -460,6 +480,11 @@ namespace SnakeGame
         private void cbBackgroundChange(object sender, EventArgs e)
         {
             cbButton.BackColor = Color.LightGray;
+        }
+
+        private void cbChangeBack(object sender, EventArgs e)
+        {
+            cbButton.BackColor = Color.Gray;
         }
     }
 }

@@ -18,14 +18,7 @@ namespace SnakeGame
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
 
-            int[,] grid = new int[10, 10];
-
-            for (var i = 0; i < grid.GetLength(0); i++)
-            {
-                for (var j = 0; j < grid.GetLength(1); j++)
-                    Console.Write("{0} ", grid[i, j]);
-                Console.WriteLine();
-            }
+            
         }
 
     }

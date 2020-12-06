@@ -48,13 +48,16 @@ namespace SnakeGame
             this.rottenDesc = new System.Windows.Forms.Label();
             this.superDesc = new System.Windows.Forms.Label();
             this.cbButton = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.highestScore = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.grid)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // grid
             // 
-            this.grid.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.grid.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.grid.Location = new System.Drawing.Point(12, 141);
             this.grid.Name = "grid";
             this.grid.Size = new System.Drawing.Size(600, 600);
@@ -108,7 +111,7 @@ namespace SnakeGame
             // stats
             // 
             this.stats.Font = new System.Drawing.Font("Comic Sans MS", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.stats.Location = new System.Drawing.Point(814, 141);
+            this.stats.Location = new System.Drawing.Point(825, 300);
             this.stats.Name = "stats";
             this.stats.Size = new System.Drawing.Size(100, 28);
             this.stats.TabIndex = 6;
@@ -175,7 +178,7 @@ namespace SnakeGame
             this.tableLayoutPanel1.Controls.Add(this.label1, 0, 2);
             this.tableLayoutPanel1.Controls.Add(this.itemNum, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.label2, 0, 1);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(760, 206);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(742, 343);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 3;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 49.38272F));
@@ -222,19 +225,53 @@ namespace SnakeGame
             this.cbButton.BackColor = System.Drawing.Color.Gray;
             this.cbButton.Font = new System.Drawing.Font("Mongolian Baiti", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbButton.ForeColor = System.Drawing.Color.Black;
-            this.cbButton.Location = new System.Drawing.Point(755, 417);
+            this.cbButton.Location = new System.Drawing.Point(757, 577);
             this.cbButton.Name = "cbButton";
             this.cbButton.Size = new System.Drawing.Size(244, 67);
             this.cbButton.TabIndex = 10;
             this.cbButton.Text = "Toggle colorblind mode!";
             this.cbButton.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.cbButton.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ToggleColorBlind);
+            this.cbButton.MouseLeave += new System.EventHandler(this.cbChangeBack);
             this.cbButton.MouseHover += new System.EventHandler(this.cbBackgroundChange);
+            // 
+            // label3
+            // 
+            this.label3.Font = new System.Drawing.Font("Comic Sans MS", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(814, 141);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(134, 34);
+            this.label3.TabIndex = 11;
+            this.label3.Text = "C# Group 1";
+            // 
+            // label4
+            // 
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(721, 187);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(316, 76);
+            this.label4.TabIndex = 12;
+            this.label4.Text = "Game created by Tyler Stamp, Alson Kharel, Anthony Sepulveda, Minh Huynh, and Nou" +
+    "r Shinnawi";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // highestScore
+            // 
+            this.highestScore.AutoSize = true;
+            this.highestScore.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.highestScore.Location = new System.Drawing.Point(737, 497);
+            this.highestScore.Name = "highestScore";
+            this.highestScore.Size = new System.Drawing.Size(254, 25);
+            this.highestScore.TabIndex = 13;
+            this.highestScore.Text = "Session\'s highest score: ";
             // 
             // Form1
             // 
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
             this.ClientSize = new System.Drawing.Size(1082, 753);
+            this.Controls.Add(this.highestScore);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.cbButton);
             this.Controls.Add(this.gameOverLabel);
             this.Controls.Add(this.stats);
@@ -244,6 +281,7 @@ namespace SnakeGame
             this.Controls.Add(this.grid);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "Form1";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "C# Group 1 - Snake Game";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyUp);
@@ -276,6 +314,9 @@ namespace SnakeGame
         private System.Windows.Forms.Label rottenDesc;
         private System.Windows.Forms.Label itemDesc;
         private System.Windows.Forms.Label cbButton;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label highestScore;
     }
 }
 
